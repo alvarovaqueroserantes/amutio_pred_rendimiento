@@ -7,7 +7,7 @@ from tensorflow.keras.models import load_model
 
 # CONFIG
 st.set_page_config(
-    page_title="🌿 AMUTIO Predictive Dashboard",
+    page_title="AMUTIO Predictive Dashboard",
     page_icon="🌿",
     layout="wide",
     initial_sidebar_state="expanded"
