@@ -5,39 +5,67 @@ import joblib
 from streamlit_echarts import st_echarts
 from tensorflow.keras.models import load_model
 
-# CONFIG
+# CONFIGURACIÓN
 st.set_page_config(
     page_title="AMUTIO Predictive Dashboard",
-    page_icon="images/logo.png",  # icono en la pestaña
+    page_icon="images/logo.png",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# CABECERA CON LOGO
-col_logo, col_title = st.columns([1, 12])
-with col_logo:
-    st.image("images/logo.png", width=60)
-with col_title:
-    st.markdown(
-        """
-        <h1 style="color:#4CAF50; font-size: 2.2em;">
-        AMUTIO Predictive IA - Centro de Control
-        </h1>
-        """,
-        unsafe_allow_html=True
-    )
+# CABECERA PROFESIONAL
+st.markdown(
+    """
+    <style>
+        .header-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 10px;
+        }
+        .header-title {
+            color: #2E7D32;
+            font-size: 2em;
+            font-weight: bold;
+            margin: 0;
+        }
+        .header-subtitle {
+            font-size: 1rem;
+            color: #555;
+            margin: 0;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+st.markdown(
+    """
+    <div class="header-container">
+        <img src="images/logo.png" alt="Amutio logo" style="width:70px;">
+        <div>
+            <p class="header-title">AMUTIO Predictive IA</p>
+            <p class="header-subtitle">Centro de Control — Dashboard 2025</p>
+        </div>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+st.divider()
 
 # MODELOS
 stack_model = joblib.load("modelo_stack.pkl")
 lstm_model = load_model("modelo_lstm.h5", compile=False)
 
-# FILE UPLOADS
+# SIDEBAR
 with st.sidebar:
     st.markdown("## 📁 Datos de entrada")
     uploaded_file = st.file_uploader("Archivo de seguimiento semanal (CSV)", type=["csv"])
     uploaded_forecast = st.file_uploader("Archivo de predicción meteorológica (CSV)", type=["csv"])
     st.divider()
 
+# CONTENIDO PRINCIPAL
 if uploaded_file:
     df = pd.read_csv(uploaded_file, parse_dates=["fecha"])
     parcelas = df["parcela"].unique()
@@ -123,7 +151,7 @@ if uploaded_file:
             week_series = week_series[-ciclo_weeks:]
 
         week_series_norm = (week_series - week_series.min(axis=0)) / (
-                week_series.max(axis=0) - week_series.min(axis=0) + 1e-8
+            week_series.max(axis=0) - week_series.min(axis=0) + 1e-8
         )
         week_series_norm = week_series_norm.reshape((1, ciclo_weeks, 4))
         pred_lstm = lstm_model.predict(week_series_norm)[0].flatten()
@@ -138,7 +166,7 @@ if uploaded_file:
 
         if uploaded_forecast:
             df_forecast_p = df_forecast[df_forecast["parcela"] == parcela_sel]
-            st.subheader("📌 Resumen de recomendaciones próximas 4 semanas")
+            st.subheader("📌 Recomendaciones próximas 4 semanas")
 
             reco_data = []
             for _, row in df_forecast_p.iterrows():
@@ -157,7 +185,7 @@ if uploaded_file:
 
             st.dataframe(pd.DataFrame(reco_data), use_container_width=True)
 
-            # proyecciones
+            # proyecciones futuras
             future_opt = [round(pred_lstm_py[-1], 2)]
             seq_opt = week_series.tolist()
             fert_acum_opt = datos_p["fertilizante"].sum()
@@ -176,7 +204,7 @@ if uploaded_file:
                 seq_opt.append(semana_o)
                 seq_o_np = np.array(seq_opt[-ciclo_weeks:])
                 seq_o_norm = (seq_o_np - seq_o_np.min(axis=0)) / (
-                        seq_o_np.max(axis=0) - seq_o_np.min(axis=0) + 1e-8
+                    seq_o_np.max(axis=0) - seq_o_np.min(axis=0) + 1e-8
                 )
                 pred_next = lstm_model.predict(seq_o_norm.reshape(1, ciclo_weeks, 4))[0][-1]
                 future_opt.append(round(float(pred_next), 2))
@@ -219,18 +247,17 @@ if uploaded_file:
 
     # FOOTER
     st.markdown("---")
-    col1, col2 = st.columns([1, 12])
-    with col1:
-        st.image("images/logo.png", width=30)
-    with col2:
-        st.markdown(
-            """
-            <span style="font-size:0.9em; color:#555;">
+    st.markdown(
+        """
+        <div style="display:flex; align-items:center; gap:10px;">
+            <img src="images/logo.png" style="width:25px;">
+            <span style="font-size:0.85em; color:#555;">
                 <em>AMUTIO Predictive IA | Dashboard 2025 | Monitorización en vivo</em>
             </span>
-            """,
-            unsafe_allow_html=True
-        )
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 else:
     st.warning("⚠️ Por favor sube el CSV de seguimiento semanal para comenzar.")
