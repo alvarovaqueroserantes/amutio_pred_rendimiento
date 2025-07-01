@@ -202,6 +202,11 @@ if uploaded_file:
                 future_opt.append(round(float(pred_next),2))
 
             st.markdown("#### Proyección rendimiento")
+            # valores históricos
+            historico_labels = [round(v, 2) if v is not None else None for v in pred_lstm_py + [None]*4]
+            # escenario futuro
+            escenario_labels = [None]*(len(pred_lstm_py)-1) + [round(v, 2) for v in future_opt]
+
             line_opt = {
                 "xAxis": {"type": "category", "data": list(range(1, len(pred_lstm_py) + 5))},
                 "yAxis": {
@@ -212,25 +217,23 @@ if uploaded_file:
                 },
                 "series": [
                     {
-                        "data": pred_lstm_py + [None]*4,
+                        "data": historico_labels,
                         "type": "line",
                         "smooth": True,
                         "name": "Histórico",
                         "label": {
                             "show": True,
-                            "formatter": """function(params){return params.value.toFixed(2)}""",
                             "position": "top"
                         },
                         "symbolSize": 6
                     },
                     {
-                        "data": [None]*(len(pred_lstm_py)-1) + future_opt,
+                        "data": escenario_labels,
                         "type": "line",
                         "smooth": True,
                         "name": "Escenario",
                         "label": {
                             "show": True,
-                            "formatter": """function(params){return params.value.toFixed(2)}""",
                             "position": "top"
                         },
                         "symbolSize": 6,
@@ -239,6 +242,7 @@ if uploaded_file:
                 ],
                 "tooltip": {"trigger": "axis"}
             }
+
             st_echarts(options=line_opt, height="500px")
 
         st.markdown("#### Últimos registros")
