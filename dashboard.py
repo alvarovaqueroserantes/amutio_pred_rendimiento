@@ -104,22 +104,65 @@ if uploaded_file:
             riego_medio = datos_p["riego"].mean()
 
             X_input = np.array([[variedad_code, tam_parcela_ha, temp_media, temp_std,
-                                 lluvia_total, fertilizante_total, fertilizante_medio,
-                                 riego_total, riego_medio, mes_cosecha]])
+                                lluvia_total, fertilizante_total, fertilizante_medio,
+                                riego_total, riego_medio, mes_cosecha]])
             pred = stack_model.predict(X_input)[0]
             global_preds.append(pred)
 
-        col_a, col_b, col_c = st.columns(3)
-        col_a.metric("Rendimiento medio (XGBoost)", f"{np.mean(global_preds):.2f} ton/ha")
+        # métricas de rendimiento
+        col_a, col_b, col_c, col_d = st.columns(4)
+        col_a.metric("Rendimiento medio", f"{np.mean(global_preds):.2f} ton/ha")
         col_b.metric("Mejor parcela", f"{np.max(global_preds):.2f} ton/ha")
         col_c.metric("Peor parcela", f"{np.min(global_preds):.2f} ton/ha")
+        col_d.metric("Variabilidad", f"{np.std(global_preds):.2f} ton/ha")
 
+        # indicadores ambientales globales
+        media_temp = df["temp_media"].mean()
+        media_lluvia = df["lluvia"].mean()
+        media_fertilizante = df["fertilizante"].mean()
+        media_riego = df["riego"].mean()
+
+        st.markdown("#### Condiciones globales promedio")
+        col1, col2, col3, col4 = st.columns(4)
+        col1.metric("Temperatura media", f"{media_temp:.1f} °C")
+        col2.metric("Lluvia media", f"{media_lluvia:.1f} mm/semana")
+        col3.metric("Fertilizante medio", f"{media_fertilizante:.1f} kg/semana")
+        col4.metric("Riego medio", f"{media_riego:.1f} mm/semana")
+
+        # tabla ranking
         st.markdown("#### Ranking de parcelas")
         ranking_df = pd.DataFrame({
             "Parcela": parcelas,
             "Predicción rendimiento (ton/ha)": global_preds
         }).sort_values(by="Predicción rendimiento (ton/ha)", ascending=False)
+
         st.dataframe(ranking_df, use_container_width=True)
+
+        # gráfico de barras del ranking
+        st.markdown("#### Distribución de rendimiento por parcela")
+        bar_chart_opt = {
+            "xAxis": {
+                "type": "category",
+                "data": ranking_df["Parcela"].tolist(),
+            },
+            "yAxis": {
+                "type": "value",
+                "name": "ton/ha",
+                "nameLocation": "middle",
+                "nameGap": 30,
+            },
+            "series": [
+                {
+                    "data": [round(x, 2) for x in ranking_df["Predicción rendimiento (ton/ha)"]],
+                    "type": "bar",
+                    "label": {"show": True, "position": "top"},
+                    "itemStyle": {"color": "#4CAF50"},
+                }
+            ],
+            "tooltip": {"trigger": "axis"},
+            "grid": {"left": "3%", "right": "4%", "bottom": "3%", "containLabel": True},
+        }
+        st_echarts(options=bar_chart_opt, height="400px")
 
     else:
         parcela_sel = st.selectbox("Selecciona parcela", parcelas)
