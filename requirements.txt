@@ -4,3 +4,7 @@ numpy
 tensorflow
 joblib
 streamlit_echarts
+scikit-learn
+prettytable
+pyecharts
+simplejson
