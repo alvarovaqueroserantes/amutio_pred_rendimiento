@@ -913,7 +913,7 @@ if uploaded_file:
 
 
 
-        # definición del mapa de parcelas
+        # definición del mapa de parcelas con zoom automático
         def show_static_map(global_preds, ranking_df, parcel_coords):
             min_pred = np.min(global_preds)
             max_pred = np.max(global_preds)
@@ -925,10 +925,28 @@ if uploaded_file:
                 b = 0
                 return f"rgb({r},{g},{b})"
 
-            # inicializar mapa
-            m = folium.Map(location=[37.620, -0.980], zoom_start=12, tiles="cartodbpositron")
+            # recopilar todos los puntos de todas las parcelas
+            all_coords = []
+            for coords in parcel_coords.values():
+                all_coords.extend(coords)
 
-            # añadir parcelas coloreadas
+            # calcular centroides aproximados
+            mean_lat = np.mean([c[0] for c in all_coords])
+            mean_lon = np.mean([c[1] for c in all_coords])
+
+            # calcular bounding box para ajustar mejor el zoom
+            min_lat = min(c[0] for c in all_coords)
+            max_lat = max(c[0] for c in all_coords)
+            min_lon = min(c[1] for c in all_coords)
+            max_lon = max(c[1] for c in all_coords)
+
+            # inicializar mapa centrado en el promedio
+            m = folium.Map(location=[mean_lat, mean_lon], zoom_start=14, tiles="cartodbpositron")
+
+            # ajustar la vista para que incluya todas las parcelas
+            m.fit_bounds([[min_lat, min_lon], [max_lat, max_lon]])
+
+            # añadir polígonos
             for parcela in ranking_df["Parcela"].tolist():
                 coords = parcel_coords.get(parcela)
                 if coords:
@@ -949,8 +967,8 @@ if uploaded_file:
                         """,
                     ).add_to(m)
 
-            # devolver html embebido
             return m._repr_html_()
+
 
         # sólo se renderiza una vez
         if "static_map" not in st.session_state:
