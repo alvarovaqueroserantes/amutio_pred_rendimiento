@@ -224,7 +224,7 @@ if uploaded_file:
                         "type":"line",
                         "smooth":True,
                         "name":"Escenario",
-                        "label": {"show": True, "formatter": "{c:.2f}", "position":"top"},
+                        "label": {"show": True, "formatter": """function(params){return params.value.toFixed(2)}""", "position":"top"},
                         "symbolSize": 6,
                         "lineStyle": {"type":"dashed"}
                     }
