@@ -6,17 +6,21 @@ from streamlit_echarts import st_echarts
 from tensorflow.keras.models import load_model
 
 # CONFIG
+# CONFIG
 st.set_page_config(
     page_title="AMUTIO Predictive Dashboard",
-    page_icon="🌿",
+    page_icon="images/logo.png",   # usa tu propio logo
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
 st.markdown("""
-<h1 style="color:#4CAF50; font-size: 2.5em;">
-🌿 AMUTIO Predictive IA - Centro de Control
-</h1>
+    <div style="display:flex; align-items:center;">
+        <img src="images/logo.png" alt="Logo Amutio" width="60" style="margin-right:15px;">
+        <h1 style="color:#4CAF50; font-size: 2.2em; margin:0;">
+            AMUTIO Predictive IA - Centro de Control
+        </h1>
+    </div>
 """, unsafe_allow_html=True)
 
 # MODELS
