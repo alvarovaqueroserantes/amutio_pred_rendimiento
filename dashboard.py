@@ -34,9 +34,12 @@ st.markdown("""
         margin: 0;
     }
     .footer {
-        font-size: 0.8em;
-        color: #888;
-        margin-top: 20px;
+        font-size: 0.85em;
+        color: #666;
+        text-align: center;
+        margin-top: 30px;
+        border-top: 1px solid #ddd;
+        padding-top: 10px;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -201,10 +204,30 @@ if uploaded_file:
             st.markdown("#### Proyección rendimiento")
             line_opt = {
                 "xAxis": {"type": "category", "data": list(range(1,len(pred_lstm_py)+5))},
-                "yAxis": {"type": "value"},
+                "yAxis": {
+                    "type": "value",
+                    "name": "Toneladas por hectárea",
+                    "nameLocation": "middle",
+                    "nameGap": 35
+                },
                 "series": [
-                    {"data": pred_lstm_py + [None]*4, "type":"line", "smooth":True, "name":"Histórico"},
-                    {"data": [None]*(len(pred_lstm_py)-1)+future_opt, "type":"line", "smooth":True, "name":"Escenario"}
+                    {
+                        "data": pred_lstm_py + [None]*4,
+                        "type":"line",
+                        "smooth":True,
+                        "name":"Histórico",
+                        "label": {"show": True, "formatter": "{c:.2f}", "position":"top"},
+                        "symbolSize": 6
+                    },
+                    {
+                        "data": [None]*(len(pred_lstm_py)-1)+future_opt,
+                        "type":"line",
+                        "smooth":True,
+                        "name":"Escenario",
+                        "label": {"show": True, "formatter": "{c:.2f}", "position":"top"},
+                        "symbolSize": 6,
+                        "lineStyle": {"type":"dashed"}
+                    }
                 ],
                 "tooltip": {"trigger": "axis"}
             }
@@ -214,18 +237,11 @@ if uploaded_file:
         st.dataframe(datos_p.tail(5), use_container_width=True)
 
     # FOOTER
-    st.markdown("""<hr style="margin-top:20px;">""", unsafe_allow_html=True)
-    colf1, colf2 = st.columns([1, 12])
-    with colf1:
-        st.image("images/logo.png", width=30)
-    with colf2:
-        st.markdown(
-            """
-            <div class="footer">
-            AMUTIO Predictive IA — Monitorización en vivo | 2025
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+    st.markdown("""
+        <div class="footer">
+        AMUTIO Predictive IA — Monitorización en vivo | 2025
+        </div>
+    """, unsafe_allow_html=True)
+
 else:
     st.info("Por favor sube el archivo CSV de seguimiento semanal para comenzar.")
