@@ -217,6 +217,7 @@ if uploaded_file:
             "tooltip": {"trigger": "axis"},
             "grid": {"left": "3%", "right": "4%", "bottom": "3%", "containLabel": True},
         }
+        st_echarts(options=bar_chart_opt, height="400px")
         
         import folium
         from streamlit_folium import st_folium
