@@ -264,7 +264,7 @@ if uploaded_file:
 
 
         # definición del mapa de parcelas
-        def show_map(global_preds, ranking_df, parcel_coords):
+        def show_static_map(global_preds, ranking_df, parcel_coords):
             min_pred = np.min(global_preds)
             max_pred = np.max(global_preds)
 
@@ -276,7 +276,7 @@ if uploaded_file:
                 return f"rgb({r},{g},{b})"
 
             # inicializar mapa
-            m = folium.Map(location=[37.625, -0.990], zoom_start=12, tiles="cartodbpositron")
+            m = folium.Map(location=[37.620, -0.980], zoom_start=12, tiles="cartodbpositron")
 
             # añadir parcelas coloreadas
             for parcela in ranking_df["Parcela"].tolist():
@@ -299,21 +299,22 @@ if uploaded_file:
                         """,
                     ).add_to(m)
 
-            return m
+            # devolver html embebido
+            return m._repr_html_()
 
+        # sólo se renderiza una vez
+        if "static_map" not in st.session_state:
+            st.session_state["static_map"] = show_static_map(global_preds, ranking_df, parcel_coords)
 
-        # botón de control para construir el mapa UNA sola vez
-        if st.button("Mostrar mapa de parcelas"):
-            st.session_state["mapa"] = show_map(global_preds, ranking_df, parcel_coords)
-
-        # persistir el mapa ya calculado en session_state
-        if "mapa" in st.session_state:
-            st.markdown("#### Mapa de parcelas alrededor de Cartagena")
-            st_folium(st.session_state["mapa"], width=900, height=600)
-        
-        
-        st_echarts(options=bar_chart_opt, height="400px")
-
+        # mostrar el mapa en toda la anchura
+        st.markdown("#### Mapa de parcelas alrededor de Cartagena")
+        components.html(
+            st.session_state["static_map"],
+            height=600,
+            scrolling=False,
+        )
+            
+            
     else:
         parcela_sel = st.selectbox("Selecciona parcela", parcelas)
         datos_p = df[df["parcela"] == parcela_sel].sort_values("fecha")
