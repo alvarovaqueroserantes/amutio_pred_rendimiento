@@ -941,7 +941,7 @@ if uploaded_file:
             max_lon = max(c[1] for c in all_coords)
 
             # inicializar mapa centrado en el promedio
-            m = folium.Map(location=[mean_lat, mean_lon], zoom_start=14, tiles="cartodbpositron")
+            m = folium.Map(location=[mean_lat, mean_lon], zoom_start=13, tiles="cartodbpositron")
 
             # ajustar la vista para que incluya todas las parcelas
             m.fit_bounds([[min_lat, min_lon], [max_lat, max_lon]])
