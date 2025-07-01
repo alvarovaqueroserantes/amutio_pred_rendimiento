@@ -15,11 +15,11 @@ st.set_page_config(
 )
 
 st.markdown("""
-    <div style="display:flex; align-items:center;">
-        <img src="images/logo.png" alt="Logo Amutio" width="60" style="margin-right:15px;">
-        <h1 style="color:#4CAF50; font-size: 2.2em; margin:0;">
+    <div style="display: flex; align-items: center; gap: 15px;">
+        <img src="images/logo.png" alt="Logo Amutio" style="width:60px; height:auto;">
+        <div style="color:#4CAF50; font-size: 2.2em; font-weight:bold;">
             AMUTIO Predictive IA - Centro de Control
-        </h1>
+        </div>
     </div>
 """, unsafe_allow_html=True)
 
