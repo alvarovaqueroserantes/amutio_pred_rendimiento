@@ -218,17 +218,20 @@ if uploaded_file:
         st.dataframe(datos_p.tail(5), use_container_width=True)
 
     st.markdown("---")
-    st.markdown(
-        """
-        <div style="display: flex; align-items: center; gap: 15px; margin-top: 10px;">
-            <img src="images/logo.png" alt="Amutio logo" style="width:30px; height:auto;">
+    col1, col2 = st.columns([1, 10])
+
+    with col1:
+        st.image("images/logo.png", width=30, caption="Amutio")
+
+    with col2:
+        st.markdown(
+            """
             <span style="font-size:0.9em; color: #555;">
                 <em>AMUTIO Predictive IA | Dashboard 2025 | Monitorización en vivo</em>
             </span>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+            """,
+            unsafe_allow_html=True
+        )
 
 
 else:
