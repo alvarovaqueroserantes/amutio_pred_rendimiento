@@ -14,14 +14,16 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-st.markdown("""
-    <div style="display: flex; align-items: center; gap: 15px;">
-        <img src="images/logo.png" alt="Logo Amutio" style="width:60px; height:auto;">
-        <div style="color:#4CAF50; font-size: 2.2em; font-weight:bold;">
+st.markdown(
+    """
+    <div style="display: flex; align-items: center; gap: 20px;">
+        <img src="images/logo.png" alt="Amutio logo" style="width:60px; height:auto;">
+        <div style="color:#4CAF50; font-size: 2.2em; font-weight: bold;">
             AMUTIO Predictive IA - Centro de Control
         </div>
     </div>
-""", unsafe_allow_html=True)
+    """, unsafe_allow_html=True
+)
 
 # MODELS
 stack_model = joblib.load("modelo_stack.pkl")
