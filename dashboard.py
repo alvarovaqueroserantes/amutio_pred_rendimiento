@@ -217,6 +217,88 @@ if uploaded_file:
             "tooltip": {"trigger": "axis"},
             "grid": {"left": "3%", "right": "4%", "bottom": "3%", "containLabel": True},
         }
+        
+        import folium
+        from streamlit_folium import st_folium
+
+        # coordenadas aproximadas de parcelas ficticias alrededor de Cartagena
+        parcel_coords = {
+            # AGRIA
+            "Agria_p1": [(37.625, -0.995), (37.625, -0.990), (37.630, -0.990), (37.630, -0.995)],
+            "Agria_p2": [(37.625, -0.985), (37.625, -0.980), (37.630, -0.980), (37.630, -0.985)],
+            "Agria_p3": [(37.625, -0.975), (37.625, -0.970), (37.630, -0.970), (37.630, -0.975)],
+            "Agria_p4": [(37.620, -0.995), (37.620, -0.990), (37.625, -0.990), (37.625, -0.995)],
+            "Agria_p5": [(37.620, -0.985), (37.620, -0.980), (37.625, -0.980), (37.625, -0.985)],
+            "Agria_p6": [(37.620, -0.975), (37.620, -0.970), (37.625, -0.970), (37.625, -0.975)],
+            "Agria_p7": [(37.615, -0.995), (37.615, -0.990), (37.620, -0.990), (37.620, -0.995)],
+            "Agria_p8": [(37.615, -0.985), (37.615, -0.980), (37.620, -0.980), (37.620, -0.985)],
+            "Agria_p9": [(37.615, -0.975), (37.615, -0.970), (37.620, -0.970), (37.620, -0.975)],
+            "Agria_p10": [(37.610, -0.995), (37.610, -0.990), (37.615, -0.990), (37.615, -0.995)],
+
+            # MONALISA
+            "Monalisa_p1": [(37.610, -0.985), (37.610, -0.980), (37.615, -0.980), (37.615, -0.985)],
+            "Monalisa_p2": [(37.610, -0.975), (37.610, -0.970), (37.615, -0.970), (37.615, -0.975)],
+            "Monalisa_p3": [(37.605, -0.995), (37.605, -0.990), (37.610, -0.990), (37.610, -0.995)],
+            "Monalisa_p4": [(37.605, -0.985), (37.605, -0.980), (37.610, -0.980), (37.610, -0.985)],
+            "Monalisa_p5": [(37.605, -0.975), (37.605, -0.970), (37.610, -0.970), (37.610, -0.975)],
+            "Monalisa_p6": [(37.600, -0.995), (37.600, -0.990), (37.605, -0.990), (37.605, -0.995)],
+            "Monalisa_p7": [(37.600, -0.985), (37.600, -0.980), (37.605, -0.980), (37.605, -0.985)],
+            "Monalisa_p8": [(37.600, -0.975), (37.600, -0.970), (37.605, -0.970), (37.605, -0.975)],
+            "Monalisa_p9": [(37.595, -0.995), (37.595, -0.990), (37.600, -0.990), (37.600, -0.995)],
+            "Monalisa_p10": [(37.595, -0.985), (37.595, -0.980), (37.600, -0.980), (37.600, -0.985)],
+
+            # SPUNTA
+            "Spunta_p1": [(37.595, -0.975), (37.595, -0.970), (37.600, -0.970), (37.600, -0.975)],
+            "Spunta_p2": [(37.590, -0.995), (37.590, -0.990), (37.595, -0.990), (37.595, -0.995)],
+            "Spunta_p3": [(37.590, -0.985), (37.590, -0.980), (37.595, -0.980), (37.595, -0.985)],
+            "Spunta_p4": [(37.590, -0.975), (37.590, -0.970), (37.595, -0.970), (37.595, -0.975)],
+            "Spunta_p5": [(37.585, -0.995), (37.585, -0.990), (37.590, -0.990), (37.590, -0.995)],
+            "Spunta_p6": [(37.585, -0.985), (37.585, -0.980), (37.590, -0.980), (37.590, -0.985)],
+            "Spunta_p7": [(37.585, -0.975), (37.585, -0.970), (37.590, -0.970), (37.590, -0.975)],
+            "Spunta_p8": [(37.580, -0.995), (37.580, -0.990), (37.585, -0.990), (37.585, -0.995)],
+            "Spunta_p9": [(37.580, -0.985), (37.580, -0.980), (37.585, -0.980), (37.585, -0.985)],
+            "Spunta_p10": [(37.580, -0.975), (37.580, -0.970), (37.585, -0.970), (37.585, -0.975)],
+        }
+
+
+        # normalizamos el color en base a los rendimientos
+        min_pred = np.min(global_preds)
+        max_pred = np.max(global_preds)
+
+        def rendimiento_color(value):
+            # de rojo (malo) a verde (bueno)
+            ratio = (value - min_pred) / (max_pred - min_pred + 1e-8)
+            r = int(255 * (1 - ratio))
+            g = int(180 * ratio)
+            b = 0
+            return f"rgb({r},{g},{b})"
+
+        # crear mapa centrado en Cartagena
+        m = folium.Map(location=[37.625, -0.990], zoom_start=12, tiles="cartodbpositron")
+
+        # añadir las parcelas al mapa
+        for i, parcela in enumerate(ranking_df["Parcela"].tolist()):
+            coords = parcel_coords.get(parcela)
+            if coords:
+                rendimiento = ranking_df.loc[ranking_df["Parcela"]==parcela, "Predicción rendimiento (ton/ha)"].values[0]
+                color = rendimiento_color(rendimiento)
+                folium.Polygon(
+                    locations=coords,
+                    color="black",
+                    fill=True,
+                    fill_opacity=0.7,
+                    fill_color=color,
+                    weight=1,
+                    popup=f"""
+                        <b>{parcela}</b><br>
+                        Rendimiento: {rendimiento:.2f} ton/ha
+                    """
+                ).add_to(m)
+
+        # dibujarlo
+        st.markdown("#### Mapa de parcelas alrededor de Cartagena")
+        st_folium(m, width=900, height=600)
+
         st_echarts(options=bar_chart_opt, height="400px")
 
     else:
