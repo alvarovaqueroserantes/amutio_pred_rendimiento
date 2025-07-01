@@ -93,7 +93,7 @@ if uploaded_file:
             datos_p = df[df["parcela"] == parcela].sort_values("fecha")
             mes_cosecha = datos_p["fecha"].max().month
             variedad = datos_p["variedad"].iloc[-1]
-            variedad_code = {"Agria":0, "Monalisa":1, "Spunta":2}[variedad]
+            variedad_code = {"Agria": 0, "Monalisa": 1, "Spunta": 2}[variedad]
             tam_parcela_ha = datos_p["tam_parcela_ha"].iloc[-1]
             temp_media = datos_p["temp_media"].mean()
             temp_std = datos_p["temp_media"].std()
@@ -104,19 +104,47 @@ if uploaded_file:
             riego_medio = datos_p["riego"].mean()
 
             X_input = np.array([[variedad_code, tam_parcela_ha, temp_media, temp_std,
-                                lluvia_total, fertilizante_total, fertilizante_medio,
-                                riego_total, riego_medio, mes_cosecha]])
+                                 lluvia_total, fertilizante_total, fertilizante_medio,
+                                 riego_total, riego_medio, mes_cosecha]])
             pred = stack_model.predict(X_input)[0]
             global_preds.append(pred)
 
-        # métricas de rendimiento
+        # métricas con colores profesionales
         col_a, col_b, col_c, col_d = st.columns(4)
-        col_a.metric("Rendimiento medio", f"{np.mean(global_preds):.2f} ton/ha")
-        col_b.metric("Mejor parcela", f"{np.max(global_preds):.2f} ton/ha")
-        col_c.metric("Peor parcela", f"{np.min(global_preds):.2f} ton/ha")
-        col_d.metric("Variabilidad", f"{np.std(global_preds):.2f} ton/ha")
 
-        # indicadores ambientales globales
+        with col_a:
+            st.markdown(f"""
+            <div style="background:#E8F5E9; border-radius:10px; padding:15px; text-align:center; border:1px solid #C8E6C9;">
+                <div style="font-size:0.9em; color:#2E7D32; font-weight:bold;">Rendimiento medio</div>
+                <div style="font-size:1.6em; font-weight:bold; color:#1B5E20;">{np.mean(global_preds):.2f} ton/ha</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+        with col_b:
+            st.markdown(f"""
+            <div style="background:#FFFDE7; border-radius:10px; padding:15px; text-align:center; border:1px solid #FFF9C4;">
+                <div style="font-size:0.9em; color:#F57F17; font-weight:bold;">Mejor parcela</div>
+                <div style="font-size:1.6em; font-weight:bold; color:#F57F17;">{np.max(global_preds):.2f} ton/ha</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+        with col_c:
+            st.markdown(f"""
+            <div style="background:#FFEBEE; border-radius:10px; padding:15px; text-align:center; border:1px solid #FFCDD2;">
+                <div style="font-size:0.9em; color:#C62828; font-weight:bold;">Peor parcela</div>
+                <div style="font-size:1.6em; font-weight:bold; color:#B71C1C;">{np.min(global_preds):.2f} ton/ha</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+        with col_d:
+            st.markdown(f"""
+            <div style="background:#E3F2FD; border-radius:10px; padding:15px; text-align:center; border:1px solid #BBDEFB;">
+                <div style="font-size:0.9em; color:#1565C0; font-weight:bold;">Variabilidad</div>
+                <div style="font-size:1.6em; font-weight:bold; color:#0D47A1;">{np.std(global_preds):.2f} ton/ha</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+        # indicadores ambientales
         media_temp = df["temp_media"].mean()
         media_lluvia = df["lluvia"].mean()
         media_fertilizante = df["fertilizante"].mean()
@@ -124,21 +152,48 @@ if uploaded_file:
 
         st.markdown("#### Condiciones globales promedio")
         col1, col2, col3, col4 = st.columns(4)
-        col1.metric("Temperatura media", f"{media_temp:.1f} °C")
-        col2.metric("Lluvia media", f"{media_lluvia:.1f} mm/semana")
-        col3.metric("Fertilizante medio", f"{media_fertilizante:.1f} kg/semana")
-        col4.metric("Riego medio", f"{media_riego:.1f} mm/semana")
 
-        # tabla ranking
+        with col1:
+            st.markdown(f"""
+            <div style="background:#F1F8E9; border-radius:10px; padding:10px; text-align:center;">
+                <span style="font-size:0.9em; color:#558B2F; font-weight:bold;">Temperatura media</span><br>
+                <span style="font-size:1.4em; font-weight:bold;">{media_temp:.1f} °C</span>
+            </div>
+            """, unsafe_allow_html=True)
+
+        with col2:
+            st.markdown(f"""
+            <div style="background:#E8F5E9; border-radius:10px; padding:10px; text-align:center;">
+                <span style="font-size:0.9em; color:#33691E; font-weight:bold;">Lluvia media</span><br>
+                <span style="font-size:1.4em; font-weight:bold;">{media_lluvia:.1f} mm/semana</span>
+            </div>
+            """, unsafe_allow_html=True)
+
+        with col3:
+            st.markdown(f"""
+            <div style="background:#FFF8E1; border-radius:10px; padding:10px; text-align:center;">
+                <span style="font-size:0.9em; color:#FF8F00; font-weight:bold;">Fertilizante medio</span><br>
+                <span style="font-size:1.4em; font-weight:bold;">{media_fertilizante:.1f} kg/semana</span>
+            </div>
+            """, unsafe_allow_html=True)
+
+        with col4:
+            st.markdown(f"""
+            <div style="background:#E1F5FE; border-radius:10px; padding:10px; text-align:center;">
+                <span style="font-size:0.9em; color:#0288D1; font-weight:bold;">Riego medio</span><br>
+                <span style="font-size:1.4em; font-weight:bold;">{media_riego:.1f} mm/semana</span>
+            </div>
+            """, unsafe_allow_html=True)
+
+        # ranking
         st.markdown("#### Ranking de parcelas")
         ranking_df = pd.DataFrame({
             "Parcela": parcelas,
             "Predicción rendimiento (ton/ha)": global_preds
         }).sort_values(by="Predicción rendimiento (ton/ha)", ascending=False)
-
         st.dataframe(ranking_df, use_container_width=True)
 
-        # gráfico de barras del ranking
+        # gráfico de barras
         st.markdown("#### Distribución de rendimiento por parcela")
         bar_chart_opt = {
             "xAxis": {
