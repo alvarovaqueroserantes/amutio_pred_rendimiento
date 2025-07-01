@@ -262,44 +262,49 @@ if uploaded_file:
 
 
 
-        # normalizamos el color en base a los rendimientos
-        min_pred = np.min(global_preds)
-        max_pred = np.max(global_preds)
+        def show_map():
+            min_pred = np.min(global_preds)
+            max_pred = np.max(global_preds)
 
-        def rendimiento_color(value):
-            # de rojo (malo) a verde (bueno)
-            ratio = (value - min_pred) / (max_pred - min_pred + 1e-8)
-            r = int(255 * (1 - ratio))
-            g = int(180 * ratio)
-            b = 0
-            return f"rgb({r},{g},{b})"
+            def rendimiento_color(value):
+                ratio = (value - min_pred) / (max_pred - min_pred + 1e-8)
+                r = int(255 * (1 - ratio))
+                g = int(180 * ratio)
+                b = 0
+                return f"rgb({r},{g},{b})"
 
-        # crear mapa centrado en Cartagena
-        m = folium.Map(location=[37.625, -0.990], zoom_start=12, tiles="cartodbpositron")
+            m = folium.Map(location=[37.625, -0.990], zoom_start=12, tiles="cartodbpositron")
 
-        # añadir las parcelas al mapa
-        for i, parcela in enumerate(ranking_df["Parcela"].tolist()):
-            coords = parcel_coords.get(parcela)
-            if coords:
-                rendimiento = ranking_df.loc[ranking_df["Parcela"]==parcela, "Predicción rendimiento (ton/ha)"].values[0]
-                color = rendimiento_color(rendimiento)
-                folium.Polygon(
-                    locations=coords,
-                    color="black",
-                    fill=True,
-                    fill_opacity=0.7,
-                    fill_color=color,
-                    weight=1,
-                    popup=f"""
-                        <b>{parcela}</b><br>
-                        Rendimiento: {rendimiento:.2f} ton/ha
-                    """
-                ).add_to(m)
+            for parcela in ranking_df["Parcela"].tolist():
+                coords = parcel_coords.get(parcela)
+                if coords:
+                    rendimiento = ranking_df.loc[ranking_df["Parcela"]==parcela, "Predicción rendimiento (ton/ha)"].values[0]
+                    color = rendimiento_color(rendimiento)
+                    folium.Polygon(
+                        locations=coords,
+                        color="black",
+                        fill=True,
+                        fill_opacity=0.7,
+                        fill_color=color,
+                        weight=1,
+                        popup=f"""
+                            <b>{parcela}</b><br>
+                            Rendimiento: {rendimiento:.2f} ton/ha
+                        """
+                    ).add_to(m)
 
-        # dibujarlo
-        st.markdown("#### Mapa de parcelas alrededor de Cartagena")
-        st_folium(m, width=900, height=600)
+            return m
 
+        # botón de control
+        if st.button("Mostrar mapa de parcelas"):
+            st.session_state["mapa"] = show_map()
+
+        # si existe en la sesión, se dibuja SIN volver a recalcular
+        if "mapa" in st.session_state:
+            st.markdown("#### Mapa de parcelas")
+            st_folium(st.session_state["mapa"], width=900, height=600)
+        
+        
         st_echarts(options=bar_chart_opt, height="400px")
 
     else:
