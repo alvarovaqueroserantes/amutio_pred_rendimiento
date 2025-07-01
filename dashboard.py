@@ -221,6 +221,7 @@ if uploaded_file:
         
         import folium
         from streamlit_folium import st_folium
+        import streamlit.components.v1 as components
 
         # coordenadas aproximadas de parcelas ficticias alrededor de Cartagena
         parcel_coords = {
@@ -275,10 +276,8 @@ if uploaded_file:
                 b = 0
                 return f"rgb({r},{g},{b})"
 
-            # inicializar mapa
             m = folium.Map(location=[37.620, -0.980], zoom_start=12, tiles="cartodbpositron")
 
-            # añadir parcelas coloreadas
             for parcela in ranking_df["Parcela"].tolist():
                 coords = parcel_coords.get(parcela)
                 if coords:
@@ -299,14 +298,13 @@ if uploaded_file:
                         """,
                     ).add_to(m)
 
-            # devolver html embebido
             return m._repr_html_()
 
-        # sólo se renderiza una vez
+        # solo se hace una vez
         if "static_map" not in st.session_state:
             st.session_state["static_map"] = show_static_map(global_preds, ranking_df, parcel_coords)
 
-        # mostrar el mapa en toda la anchura
+        # mostrar
         st.markdown("#### Mapa de parcelas alrededor de Cartagena")
         components.html(
             st.session_state["static_map"],
