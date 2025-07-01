@@ -6,8 +6,18 @@ from streamlit_echarts import st_echarts
 from tensorflow.keras.models import load_model
 
 # CONFIG
-st.set_page_config(page_title="🌿 AMUTIO Predictive Dashboard", layout="wide")
-st.title("🌿 AMUTIO Predictive IA - Centro de Control")
+st.set_page_config(
+    page_title="🌿 AMUTIO Predictive Dashboard",
+    page_icon="🌿",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+st.markdown("""
+<h1 style="color:#4CAF50; font-size: 2.5em;">
+🌿 AMUTIO Predictive IA - Centro de Control
+</h1>
+""", unsafe_allow_html=True)
 
 # MODELS
 stack_model = joblib.load("modelo_stack.pkl")
