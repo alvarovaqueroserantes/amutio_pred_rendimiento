@@ -203,7 +203,7 @@ if uploaded_file:
 
             st.markdown("#### Proyección rendimiento")
             line_opt = {
-                "xAxis": {"type": "category", "data": list(range(1,len(pred_lstm_py)+5))},
+                "xAxis": {"type": "category", "data": list(range(1, len(pred_lstm_py) + 5))},
                 "yAxis": {
                     "type": "value",
                     "name": "Toneladas por hectárea",
@@ -213,18 +213,26 @@ if uploaded_file:
                 "series": [
                     {
                         "data": pred_lstm_py + [None]*4,
-                        "type":"line",
-                        "smooth":True,
-                        "name":"Histórico",
-                        "label": {"show": True, "formatter": "{c:.2f}", "position":"top"},
+                        "type": "line",
+                        "smooth": True,
+                        "name": "Histórico",
+                        "label": {
+                            "show": True,
+                            "formatter": """function(params){return params.value.toFixed(2)}""",
+                            "position": "top"
+                        },
                         "symbolSize": 6
                     },
                     {
-                        "data": [None]*(len(pred_lstm_py)-1)+future_opt,
-                        "type":"line",
-                        "smooth":True,
-                        "name":"Escenario",
-                        "label": {"show": True, "formatter": """function(params){return params.value.toFixed(2)}""", "position":"top"},
+                        "data": [None]*(len(pred_lstm_py)-1) + future_opt,
+                        "type": "line",
+                        "smooth": True,
+                        "name": "Escenario",
+                        "label": {
+                            "show": True,
+                            "formatter": """function(params){return params.value.toFixed(2)}""",
+                            "position": "top"
+                        },
                         "symbolSize": 6,
                         "lineStyle": {"type":"dashed"}
                     }
