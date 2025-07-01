@@ -8,7 +8,7 @@ from tensorflow.keras.models import load_model
 # CONFIGURACIÓN
 st.set_page_config(
     page_title="AMUTIO Predictive Dashboard",
-    page_icon="images/logo.png",
+    page_icon="images/logo.png",  # Streamlit sí lo pilla como icon
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -17,40 +17,33 @@ st.set_page_config(
 st.markdown(
     """
     <style>
-        .header-container {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            margin-bottom: 10px;
-        }
         .header-title {
             color: #2E7D32;
             font-size: 2em;
             font-weight: bold;
-            margin: 0;
+            margin-bottom: 0;
         }
         .header-subtitle {
             font-size: 1rem;
             color: #555;
-            margin: 0;
+            margin-top: 0;
         }
     </style>
     """,
     unsafe_allow_html=True
 )
 
-st.markdown(
-    """
-    <div class="header-container">
-        <img src="images/logo.png" alt="Amutio logo" style="width:70px;">
-        <div>
-            <p class="header-title">AMUTIO Predictive IA</p>
-            <p class="header-subtitle">Centro de Control — Dashboard 2025</p>
-        </div>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+col1, col2 = st.columns([1, 12])
+with col1:
+    st.image("images/logo.png", width=70)
+with col2:
+    st.markdown(
+        """
+        <p class="header-title">AMUTIO Predictive IA</p>
+        <p class="header-subtitle">Centro de Control — Dashboard 2025</p>
+        """,
+        unsafe_allow_html=True
+    )
 
 st.divider()
 
@@ -123,7 +116,6 @@ if uploaded_file:
         datos_p = df[df["parcela"] == parcela_sel].sort_values("fecha")
         st.subheader(f"🟢 Parcela: {parcela_sel}")
 
-        # XGBoost
         mes_cosecha = datos_p["fecha"].max().month
         variedad = datos_p["variedad"].iloc[-1]
         variedad_code = {"Agria": 0, "Monalisa": 1, "Spunta": 2}[variedad]
@@ -247,17 +239,18 @@ if uploaded_file:
 
     # FOOTER
     st.markdown("---")
-    st.markdown(
-        """
-        <div style="display:flex; align-items:center; gap:10px;">
-            <img src="images/logo.png" style="width:25px;">
+    colf1, colf2 = st.columns([1, 12])
+    with colf1:
+        st.image("images/logo.png", width=25)
+    with colf2:
+        st.markdown(
+            """
             <span style="font-size:0.85em; color:#555;">
                 <em>AMUTIO Predictive IA | Dashboard 2025 | Monitorización en vivo</em>
             </span>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+            """,
+            unsafe_allow_html=True
+        )
 
 else:
     st.warning("⚠️ Por favor sube el CSV de seguimiento semanal para comenzar.")
