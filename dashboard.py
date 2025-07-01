@@ -262,7 +262,8 @@ if uploaded_file:
 
 
 
-        def show_map():
+        # definición del mapa de parcelas
+        def show_map(global_preds, ranking_df, parcel_coords):
             min_pred = np.min(global_preds)
             max_pred = np.max(global_preds)
 
@@ -273,12 +274,16 @@ if uploaded_file:
                 b = 0
                 return f"rgb({r},{g},{b})"
 
+            # inicializar mapa
             m = folium.Map(location=[37.625, -0.990], zoom_start=12, tiles="cartodbpositron")
 
+            # añadir parcelas coloreadas
             for parcela in ranking_df["Parcela"].tolist():
                 coords = parcel_coords.get(parcela)
                 if coords:
-                    rendimiento = ranking_df.loc[ranking_df["Parcela"]==parcela, "Predicción rendimiento (ton/ha)"].values[0]
+                    rendimiento = ranking_df.loc[
+                        ranking_df["Parcela"] == parcela, "Predicción rendimiento (ton/ha)"
+                    ].values[0]
                     color = rendimiento_color(rendimiento)
                     folium.Polygon(
                         locations=coords,
@@ -290,18 +295,19 @@ if uploaded_file:
                         popup=f"""
                             <b>{parcela}</b><br>
                             Rendimiento: {rendimiento:.2f} ton/ha
-                        """
+                        """,
                     ).add_to(m)
 
             return m
 
-        # botón de control
-        if st.button("Mostrar mapa de parcelas"):
-            st.session_state["mapa"] = show_map()
 
-        # si existe en la sesión, se dibuja SIN volver a recalcular
+        # botón de control para construir el mapa UNA sola vez
+        if st.button("Mostrar mapa de parcelas"):
+            st.session_state["mapa"] = show_map(global_preds, ranking_df, parcel_coords)
+
+        # persistir el mapa ya calculado en session_state
         if "mapa" in st.session_state:
-            st.markdown("#### Mapa de parcelas")
+            st.markdown("#### Mapa de parcelas alrededor de Cartagena")
             st_folium(st.session_state["mapa"], width=900, height=600)
         
         
