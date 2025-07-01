@@ -91,7 +91,7 @@ if uploaded_file:
         st.dataframe(ranking_df, use_container_width=True)
 
     else:
-        parcela_sel = st.selectbox("🌱 Selecciona la parcela a analizar", parcelas)
+        parcela_sel = st.selectbox("*Selecciona la parcela a analizar*", parcelas)
         datos_p = df[df["parcela"]==parcela_sel].sort_values("fecha")
         st.subheader(f"🟢 Parcela: {parcela_sel}")
 
@@ -218,7 +218,18 @@ if uploaded_file:
         st.dataframe(datos_p.tail(5), use_container_width=True)
 
     st.markdown("---")
-    st.markdown("🌿 *AMUTIO Predictive IA* | Dashboard 2025 | Monitorización en vivo")
+    st.markdown(
+        """
+        <div style="display: flex; align-items: center; gap: 15px; margin-top: 10px;">
+            <img src="images/logo.png" alt="Amutio logo" style="width:30px; height:auto;">
+            <span style="font-size:0.9em; color: #555;">
+                <em>AMUTIO Predictive IA | Dashboard 2025 | Monitorización en vivo</em>
+            </span>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
 
 else:
     st.warning("⚠️ Por favor sube el CSV de seguimiento semanal para comenzar.")
