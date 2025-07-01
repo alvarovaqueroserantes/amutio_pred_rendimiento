@@ -681,8 +681,10 @@ if uploaded_file:
                 b = 0
                 return f"rgb({r},{g},{b})"
 
+            # inicializar mapa
             m = folium.Map(location=[37.620, -0.980], zoom_start=12, tiles="cartodbpositron")
 
+            # añadir parcelas coloreadas
             for parcela in ranking_df["Parcela"].tolist():
                 coords = parcel_coords.get(parcela)
                 if coords:
@@ -703,9 +705,10 @@ if uploaded_file:
                         """,
                     ).add_to(m)
 
+            # devolver html embebido
             return m._repr_html_()
 
-        # solo se hace una vez
+        # sólo se renderiza una vez
         if "static_map" not in st.session_state:
             st.session_state["static_map"] = show_static_map(global_preds, ranking_df, parcel_coords)
 
