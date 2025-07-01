@@ -10,3 +10,5 @@ pyecharts
 simplejson
 xgboost
 lightgbm
+folium 
+streamlit-folium
