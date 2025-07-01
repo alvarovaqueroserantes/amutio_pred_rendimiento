@@ -3,4 +3,4 @@ pandas
 numpy
 tensorflow
 joblib
-streamlit-echarts
+streamlit_echarts
