@@ -221,7 +221,7 @@ if uploaded_file:
     col1, col2 = st.columns([1, 10])
 
     with col1:
-        st.image("images/logo.png", width=30, caption="Amutio")
+        st.image("images/logo.png", width=10)
 
     with col2:
         st.markdown(
