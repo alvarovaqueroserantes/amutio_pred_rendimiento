@@ -10,7 +10,14 @@ from streamlit_folium import st_folium
 import streamlit.components.v1 as components
 from parcel_coords import parcel_coords  
 import os
-LOGO_PATH = os.path.join(os.path.dirname(__file__), "images", "logo.png")
+
+##--------------------------------------------------------------------------------------- RUTAS------------------------------------------------------------------------------------##
+
+BASE_DIR = os.path.dirname(__file__)
+LOGO_PATH = os.path.join(BASE_DIR, "..", "images", "logo.png")
+MODEL_STACK_PATH = os.path.join(BASE_DIR, "..", "models", "modelo_stack.pkl")
+MODEL_LSTM_PATH = os.path.join(BASE_DIR, "..", "models", "modelo_lstm.h5")
+
 
 ##--------------------------------------------------------------------------------------- CONFIGURACIÓN------------------------------------------------------------------------------------##
 st.set_page_config(
@@ -41,8 +48,8 @@ st.markdown("""<hr style="margin-top:-10px; margin-bottom:20px;">""", unsafe_all
 
 ##--------------------------------------------------------------------------------------- MODELOS
 with st.spinner("Cargando modelos..."):
-    stack_model = joblib.load("models/modelo_stack.pkl")
-    lstm_model = load_model("models/modelo_lstm.h5", compile=False)
+    stack_model = joblib.load(MODEL_STACK_PATH)
+    lstm_model = load_model(MODEL_LSTM_PATH, compile=False)
 
 ##--------------------------------------------------------------------------------------- SIDEBAR
 with st.sidebar:
