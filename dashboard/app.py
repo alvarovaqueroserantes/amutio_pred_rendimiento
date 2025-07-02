@@ -24,7 +24,7 @@ st.markdown(HEADER_STYLE, unsafe_allow_html=True)
 ##---------------------------------------------------------------------------------------CABECERA CORPORATIVA------------------------------------------------------------------------------------##
 col_logo, col_text = st.columns([1, 12])
 with col_logo:
-    st.image("../images/logo.png", width=65)
+    st.image("images/logo.png", width=65)
 with col_text:
     st.markdown("""
         <div class="header-container">
@@ -39,8 +39,8 @@ st.markdown("""<hr style="margin-top:-10px; margin-bottom:20px;">""", unsafe_all
 
 ##--------------------------------------------------------------------------------------- MODELOS
 with st.spinner("Cargando modelos..."):
-    stack_model = joblib.load("../models/modelo_stack.pkl")
-    lstm_model = load_model("../models/modelo_lstm.h5", compile=False)
+    stack_model = joblib.load("models/modelo_stack.pkl")
+    lstm_model = load_model("models/modelo_lstm.h5", compile=False)
 
 ##--------------------------------------------------------------------------------------- SIDEBAR
 with st.sidebar:
