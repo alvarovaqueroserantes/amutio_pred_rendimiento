@@ -21,7 +21,7 @@ MODEL_LSTM_PATH = os.path.join(BASE_DIR, "models", "modelo_lstm.h5")
 
 ##--------------------------------------------------------------------------------------- CONFIGURACIÓN------------------------------------------------------------------------------------##
 st.set_page_config(
-    page_title="AMUTIO Predictive Dashboard",
+    page_title="GRUPO AMUTIO Predictive Dashboard",
     page_icon=LOGO_PATH,
     layout="wide",
     initial_sidebar_state="expanded"
@@ -429,7 +429,7 @@ if uploaded_file:
     # FOOTER
     st.markdown("""
         <div class="footer">
-        AMUTIO Predictive IA — Monitorización en vivo | 2025
+        GRUPO AMUTIO Predictive IA — Monitorización en vivo | 2025
         </div>
     """, unsafe_allow_html=True)
 
