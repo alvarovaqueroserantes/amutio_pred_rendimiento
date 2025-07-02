@@ -4,16 +4,17 @@ import numpy as np
 import joblib
 from streamlit_echarts import st_echarts
 from tensorflow.keras.models import load_model
-from styles import HEADER_STYLE     
+from styles import HEADER_STYLE
 import folium
 from streamlit_folium import st_folium
 import streamlit.components.v1 as components
-from parcel_coords import parcel_coords  
+from parcel_coords import parcel_coords
 import os
 
+##--------------------------------------------------------------------------------------- SESION STATE
 if "show_info" not in st.session_state:
     st.session_state["show_info"] = True
-    
+
 ##--------------------------------------------------------------------------------------- RUTAS
 BASE_DIR = os.path.dirname(__file__)
 LOGO_PATH = os.path.join(BASE_DIR, "images", "logo.png")
@@ -46,7 +47,7 @@ with col_text:
 
 st.markdown("""<hr style="margin-top:-10px; margin-bottom:20px;">""", unsafe_allow_html=True)
 
-##--------------------------------------------------------------------------------------- SIDEBAR
+##--------------------------------------------------------------------------------------- INFO PROYECTO (BANNER)
 if st.session_state.show_info:
     with st.container():
         st.markdown("""
@@ -54,9 +55,9 @@ if st.session_state.show_info:
                 <strong style="color:#1565C0; font-size:1.1em;">ⓘ Proyecto Inicial Prioritario: Sistema de Predicción de Rendimiento con IA</strong><br>
                 Este proyecto modernizará la predicción de cosecha integrando IA con datos de manejo agrícola, clima y potencialmente índices satelitales, logrando:
                 <ul style="margin-top:5px;">
-                    <li> - Ajustar almacenamiento y ventas con antelación</li>
-                    <li> - Reducir pérdidas y mejorar rentabilidad (5–10%)</li>
-                    <li> - Optimizar contratos y logística de cosecha</li>
+                    <li>✅ Ajustar almacenamiento y ventas con antelación</li>
+                    <li>✅ Reducir pérdidas y mejorar rentabilidad (5–10%)</li>
+                    <li>✅ Optimizar contratos y logística de cosecha</li>
                 </ul>
                 <strong>Plan tentativo:</strong><br>
                 <ul>
@@ -67,15 +68,20 @@ if st.session_state.show_info:
                     <li><b>Mes 6</b>: evaluación y escalado</li>
                 </ul>
                 <em>Amutio podrá escalar la solución a otras regiones y cultivos, reforzando su liderazgo en agricultura de precisión.</em>
-                <br><br>
-                <form>
-                    <button style="background-color:#1565C0;color:white;padding:5px 15px;border:none;border-radius:5px;cursor:pointer;"
-                            formaction="?close_info=1">Cerrar</button>
-                </form>
             </div>
         """, unsafe_allow_html=True)
+        if st.button("Cerrar información", key="close_info", help="Ocultar explicación del proyecto"):
+            st.session_state.show_info = False
+            st.experimental_rerun()
 
-    
+##--------------------------------------------------------------------------------------- SIDEBAR
+with st.sidebar:
+    st.header("Datos de entrada")
+    uploaded_file = st.file_uploader("Archivo de seguimiento semanal (CSV)", type=["csv"])
+    uploaded_forecast = st.file_uploader("Archivo de predicción meteorológica (CSV)", type=["csv"])
+    st.markdown("---")
+    st.caption("Versión MVP 2025")
+
 ##--------------------------------------------------------------------------------------- MODELOS
 with st.spinner("Cargando modelos..."):
     stack_model = joblib.load(MODEL_STACK_PATH)
