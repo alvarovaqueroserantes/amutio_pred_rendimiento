@@ -11,8 +11,6 @@ import streamlit.components.v1 as components
 from parcel_coords import parcel_coords  
 import os
 
-if "show_info" not in st.session_state:
-    st.session_state["show_info"] = True
 ##--------------------------------------------------------------------------------------- RUTAS
 BASE_DIR = os.path.dirname(__file__)
 LOGO_PATH = os.path.join(BASE_DIR, "images", "logo.png")
