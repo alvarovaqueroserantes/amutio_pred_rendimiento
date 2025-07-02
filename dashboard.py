@@ -4,8 +4,13 @@ import numpy as np
 import joblib
 from streamlit_echarts import st_echarts
 from tensorflow.keras.models import load_model
+from styles import HEADER_STYLE     
+import folium
+from streamlit_folium import st_folium
+import streamlit.components.v1 as components
+from parcel_coords import parcel_coords  
 
-# CONFIGURACIÓN
+##--------------------------------------------------------------------------------------- CONFIGURACIÓN------------------------------------------------------------------------------------##
 st.set_page_config(
     page_title="AMUTIO Predictive Dashboard",
     page_icon="images/logo.png",
@@ -13,38 +18,10 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# ESTILOS AVANZADOS
-st.markdown("""
-    <style>
-    .header-container {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-        margin-bottom: 10px;
-    }
-    .header-title {
-        color: #2E7D32;
-        font-size: 2em;
-        font-weight: 600;
-        margin: 0;
-    }
-    .header-subtitle {
-        font-size: 0.9em;
-        color: #555;
-        margin: 0;
-    }
-    .footer {
-        font-size: 0.85em;
-        color: #666;
-        text-align: center;
-        margin-top: 30px;
-        border-top: 1px solid #ddd;
-        padding-top: 10px;
-    }
-    </style>
-""", unsafe_allow_html=True)
+st.markdown(HEADER_STYLE, unsafe_allow_html=True)
 
-# CABECERA CORPORATIVA
+
+##---------------------------------------------------------------------------------------CABECERA CORPORATIVA------------------------------------------------------------------------------------##
 col_logo, col_text = st.columns([1, 12])
 with col_logo:
     st.image("images/logo.png", width=65)
@@ -60,12 +37,12 @@ with col_text:
 
 st.markdown("""<hr style="margin-top:-10px; margin-bottom:20px;">""", unsafe_allow_html=True)
 
-# MODELOS
+##--------------------------------------------------------------------------------------- MODELOS
 with st.spinner("Cargando modelos..."):
     stack_model = joblib.load("models/modelo_stack.pkl")
     lstm_model = load_model("models/modelo_lstm.h5", compile=False)
 
-# SIDEBAR
+##--------------------------------------------------------------------------------------- SIDEBAR
 with st.sidebar:
     st.header("Datos de entrada")
     uploaded_file = st.file_uploader("Archivo de seguimiento semanal (CSV)", type=["csv"])
@@ -73,7 +50,7 @@ with st.sidebar:
     st.markdown("---")
     st.caption("Versión MVP 2025")
 
-# CONTENIDO
+##--------------------------------------------------------------------------------------- CONTENIDO
 if uploaded_file:
     df = pd.read_csv(uploaded_file, parse_dates=["fecha"])
     parcelas = df["parcela"].unique()
@@ -109,7 +86,7 @@ if uploaded_file:
             pred = stack_model.predict(X_input)[0]
             global_preds.append(pred)
 
-        # métricas con colores profesionales
+        ##--------------------------------------------------------------------------------------- métricas con colores profesionales
         col_a, col_b, col_c, col_d = st.columns(4)
 
         with col_a:
@@ -144,7 +121,7 @@ if uploaded_file:
             </div>
             """, unsafe_allow_html=True)
 
-        # indicadores ambientales
+        ##--------------------------------------------------------------------------------------- indicadores ambientales
         media_temp = df["temp_media"].mean()
         media_lluvia = df["lluvia"].mean()
         media_fertilizante = df["fertilizante"].mean()
@@ -185,7 +162,7 @@ if uploaded_file:
             </div>
             """, unsafe_allow_html=True)
 
-        # ranking
+        ##--------------------------------------------------------------------------------------- ranking
         st.markdown("#### Ranking de parcelas")
         ranking_df = pd.DataFrame({
             "Parcela": parcelas,
@@ -193,7 +170,7 @@ if uploaded_file:
         }).sort_values(by="Predicción rendimiento (ton/ha)", ascending=False)
         st.dataframe(ranking_df, use_container_width=True)
 
-        # gráfico de barras
+        ##--------------------------------------------------------------------------------------- gráfico de barras
         st.markdown("#### Distribución de rendimiento por parcela")
         bar_chart_opt = {
             "xAxis": {
@@ -218,12 +195,8 @@ if uploaded_file:
             "grid": {"left": "3%", "right": "4%", "bottom": "3%", "containLabel": True},
         }
         st_echarts(options=bar_chart_opt, height="400px")
-        
-        import folium
-        from streamlit_folium import st_folium
-        import streamlit.components.v1 as components
-        from parcel_coords import parcel_coords  
-        
+
+## ---------------------------------------------------------------------------Mapa-----------------------------------------------------------------------------------------------------------##        
 
         # definición del mapa de parcelas con zoom automático
         def show_static_map(global_preds, ranking_df, parcel_coords):
@@ -294,7 +267,7 @@ if uploaded_file:
             scrolling=False,
         )
             
-            
+##--------------------------------------------------------------------------------------- SELECCIONAR PARCERLA            
     else:
         parcela_sel = st.selectbox("Selecciona parcela", parcelas)
         datos_p = df[df["parcela"] == parcela_sel].sort_values("fecha")
