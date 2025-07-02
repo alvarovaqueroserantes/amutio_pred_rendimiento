@@ -62,8 +62,8 @@ st.markdown("""<hr style="margin-top:-10px; margin-bottom:20px;">""", unsafe_all
 
 # MODELOS
 with st.spinner("Cargando modelos..."):
-    stack_model = joblib.load("modelo_stack.pkl")
-    lstm_model = load_model("modelo_lstm.h5", compile=False)
+    stack_model = joblib.load("models/modelo_stack.pkl")
+    lstm_model = load_model("models/modelo_lstm.h5", compile=False)
 
 # SIDEBAR
 with st.sidebar:
