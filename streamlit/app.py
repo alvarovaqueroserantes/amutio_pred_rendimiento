@@ -9,6 +9,8 @@ import folium
 from streamlit_folium import st_folium
 import streamlit.components.v1 as components
 from parcel_coords import parcel_coords  
+import os
+LOGO_PATH = os.path.join(os.path.dirname(__file__), "..", "images", "logo.png")
 
 ##--------------------------------------------------------------------------------------- CONFIGURACIÓN------------------------------------------------------------------------------------##
 st.set_page_config(
@@ -24,7 +26,7 @@ st.markdown(HEADER_STYLE, unsafe_allow_html=True)
 ##---------------------------------------------------------------------------------------CABECERA CORPORATIVA------------------------------------------------------------------------------------##
 col_logo, col_text = st.columns([1, 12])
 with col_logo:
-    st.image(r"images/logo.png", width=65)
+    st.image(LOGO_PATH, width=65)
 with col_text:
     st.markdown("""
         <div class="header-container">
