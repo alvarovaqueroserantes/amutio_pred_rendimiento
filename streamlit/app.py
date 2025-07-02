@@ -15,7 +15,7 @@ LOGO_PATH = os.path.join(os.path.dirname(__file__), "..", "images", "logo.png")
 ##--------------------------------------------------------------------------------------- CONFIGURACIÓN------------------------------------------------------------------------------------##
 st.set_page_config(
     page_title="AMUTIO Predictive Dashboard",
-    page_icon=r"images/logo.png",
+    page_icon=LOGO_PATH,
     layout="wide",
     initial_sidebar_state="expanded"
 )
