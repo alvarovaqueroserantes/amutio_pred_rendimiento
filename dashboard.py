@@ -62,8 +62,8 @@ st.markdown("""<hr style="margin-top:-10px; margin-bottom:20px;">""", unsafe_all
 
 # MODELOS
 with st.spinner("Cargando modelos..."):
-    stack_model = joblib.load("models/modelo_stack.pkl")
-    lstm_model = load_model("models/modelo_lstm.h5", compile=False)
+    stack_model = joblib.load("modelo_stack.pkl")
+    lstm_model = load_model("modelo_lstm.h5", compile=False)
 
 # SIDEBAR
 with st.sidebar:
@@ -222,10 +222,8 @@ if uploaded_file:
         import folium
         from streamlit_folium import st_folium
         import streamlit.components.v1 as components
-        from parcel_coords import parcel_coords  # <-- ahora importado desde módulo externo
-
-        # coordenadas aproximadas de parcelas ficticias alrededor de Cartagena
-        parcel_coords = parcel_coords
+        from parcel_coords import parcel_coords  
+        
 
         # definición del mapa de parcelas con zoom automático
         def show_static_map(global_preds, ranking_df, parcel_coords):
