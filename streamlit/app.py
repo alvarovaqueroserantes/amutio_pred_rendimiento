@@ -73,7 +73,14 @@ if st.session_state.show_info:
             st.session_state.show_info = False
             st.experimental_rerun()
 
-    
+##--------------------------------------------------------------------------------------- SIDEBAR
+with st.sidebar:
+    st.header("Datos de entrada")
+    uploaded_file = st.file_uploader("Archivo de seguimiento semanal (CSV)", type=["csv"])
+    uploaded_forecast = st.file_uploader("Archivo de predicción meteorológica (CSV)", type=["csv"])
+    st.markdown("---")
+    st.caption("Versión MVP 2025")
+        
 ##--------------------------------------------------------------------------------------- MODELOS
 with st.spinner("Cargando modelos..."):
     stack_model = joblib.load(MODEL_STACK_PATH)
