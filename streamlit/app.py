@@ -38,7 +38,7 @@ with col_text:
     st.markdown("""
         <div class="header-container">
             <div>
-                <div class="header-title">AMUTIO Predictive IA</div>
+                <div class="header-title">GRUPO AMUTIO Predictive IA</div>
                 <div class="header-subtitle">Centro de Control — Dashboard 2025</div>
             </div>
         </div>
