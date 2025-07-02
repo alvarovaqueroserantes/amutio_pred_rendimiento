@@ -13,7 +13,6 @@ import os
 
 if "show_info" not in st.session_state:
     st.session_state["show_info"] = True
-    
 ##--------------------------------------------------------------------------------------- RUTAS
 BASE_DIR = os.path.dirname(__file__)
 LOGO_PATH = os.path.join(BASE_DIR, "images", "logo.png")
@@ -47,40 +46,35 @@ with col_text:
 st.markdown("""<hr style="margin-top:-10px; margin-bottom:20px;">""", unsafe_allow_html=True)
 
 ##--------------------------------------------------------------------------------------- SIDEBAR
-if st.session_state.show_info:
-    with st.container():
-        st.markdown("""
-            <div style="background-color:#E3F2FD; border:1px solid #90CAF9; padding:15px; border-radius:8px; margin-bottom:20px;">
-                <strong style="color:#1565C0; font-size:1.1em;">ⓘ Proyecto Inicial Prioritario: Sistema de Predicción de Rendimiento con IA</strong><br>
-                Este proyecto modernizará la predicción de cosecha integrando IA con datos de manejo agrícola, clima y potencialmente índices satelitales, logrando:
-                <ul style="margin-top:5px;">
-                    <li> - Ajustar almacenamiento y ventas con antelación</li>
-                    <li> - Reducir pérdidas y mejorar rentabilidad (5–10%)</li>
-                    <li> - Optimizar contratos y logística de cosecha</li>
-                </ul>
-                <strong>Plan tentativo:</strong><br>
-                <ul>
-                    <li><b>Mes 0–1</b>: análisis de datos</li>
-                    <li><b>Mes 2–3</b>: desarrollo de modelos (ensambles + LSTM)</li>
-                    <li><b>Mes 4</b>: validación piloto</li>
-                    <li><b>Mes 5</b>: despliegue en la nube</li>
-                    <li><b>Mes 6</b>: evaluación y escalado</li>
-                </ul>
-                <em>Amutio podrá escalar la solución a otras regiones y cultivos, reforzando su liderazgo en agricultura de precisión.</em>
-            </div>
-        """, unsafe_allow_html=True)
-        if st.button("Cerrar información", key="close_info", help="Ocultar explicación del proyecto"):
-            st.session_state.show_info = False
-            st.experimental_rerun()
-
-##--------------------------------------------------------------------------------------- SIDEBAR
 with st.sidebar:
     st.header("Datos de entrada")
     uploaded_file = st.file_uploader("Archivo de seguimiento semanal (CSV)", type=["csv"])
     uploaded_forecast = st.file_uploader("Archivo de predicción meteorológica (CSV)", type=["csv"])
     st.markdown("---")
     st.caption("Versión MVP 2025")
-        
+
+    with st.expander("ⓘ Información del Proyecto"):
+        st.markdown("""
+**Proyecto Inicial Prioritario: Sistema de Predicción de Rendimiento con IA**
+
+Este proyecto busca modernizar y optimizar las predicciones de cosecha de Amutio, que hoy se basan en la experiencia de campo. Con IA, se espera estimar el rendimiento de forma mucho más precisa, integrando datos de manejo agrícola, clima, predicciones meteorológicas y potencialmente datos satelitales. Esto permitirá:
+
+- Ajustar almacenamiento y ventas con antelación
+- Reducir pérdidas por sobreproducción o falta de producto
+- Mejorar la rentabilidad estimada en 5–10%
+- Optimizar la logística de cosecha y contratos
+- Posicionarse como referente en agricultura de precisión
+
+**Plan de implementación tentativo:**
+- **Mes 0–1**: recopilación y análisis de datos históricos
+- **Mes 2–3**: desarrollo y entrenamiento de modelos (ensambles y redes LSTM)
+- **Mes 4**: validación piloto con campaña real
+- **Mes 5**: despliegue en la nube con dashboard
+- **Mes 6**: evaluación y plan de escalado
+
+A medio plazo, la solución será escalable a todas las zonas de cultivo y adaptable a otros cultivos o regiones, dando a Amutio una ventaja tecnológica sólida para el futuro.
+        """)
+    
 ##--------------------------------------------------------------------------------------- MODELOS
 with st.spinner("Cargando modelos..."):
     stack_model = joblib.load(MODEL_STACK_PATH)
