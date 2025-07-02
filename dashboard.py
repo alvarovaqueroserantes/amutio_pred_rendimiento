@@ -306,9 +306,31 @@ if uploaded_file:
         pred_lstm_py = [round(float(v),2) for v in pred_lstm]
 
         col1, col2, col3 = st.columns(3)
-        col1.metric("Actual (XGBoost)", f"{pred_stack:.2f} ton/ha")
-        col2.metric("Última semana (LSTM)", f"{pred_lstm_py[-1]:.2f} ton/ha")
-        col3.metric("Mejor semana", f"{np.argmax(pred_lstm_py)+1}")
+
+        with col1:
+            st.markdown(f"""
+            <div style="background:#E8F5E9; border-radius:10px; padding:15px; text-align:center; border:1px solid #C8E6C9;">
+                <div style="font-size:0.9em; color:#2E7D32; font-weight:bold;">Actual (XGBoost)</div>
+                <div style="font-size:1.6em; font-weight:bold; color:#1B5E20;">{pred_stack:.2f} ton/ha</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+        with col2:
+            st.markdown(f"""
+            <div style="background:#FFFDE7; border-radius:10px; padding:15px; text-align:center; border:1px solid #FFF9C4;">
+                <div style="font-size:0.9em; color:#F57F17; font-weight:bold;">Última semana (LSTM)</div>
+                <div style="font-size:1.6em; font-weight:bold; color:#F57F17;">{pred_lstm_py[-1]:.2f} ton/ha</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+        with col3:
+            st.markdown(f"""
+            <div style="background:#E3F2FD; border-radius:10px; padding:15px; text-align:center; border:1px solid #BBDEFB;">
+                <div style="font-size:0.9em; color:#1565C0; font-weight:bold;">Mejor semana</div>
+                <div style="font-size:1.6em; font-weight:bold; color:#0D47A1;">Semana {np.argmax(pred_lstm_py)+1}</div>
+            </div>
+            """, unsafe_allow_html=True)
+
 
         if uploaded_forecast is not None:
             df_forecast_p = df_forecast[df_forecast["parcela"]==parcela_sel]
