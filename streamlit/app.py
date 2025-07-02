@@ -14,9 +14,9 @@ import os
 ##--------------------------------------------------------------------------------------- RUTAS------------------------------------------------------------------------------------##
 
 BASE_DIR = os.path.dirname(__file__)
-LOGO_PATH = os.path.join(BASE_DIR, "..", "images", "logo.png")
-MODEL_STACK_PATH = os.path.join(BASE_DIR, "..", "models", "modelo_stack.pkl")
-MODEL_LSTM_PATH = os.path.join(BASE_DIR, "..", "models", "modelo_lstm.h5")
+LOGO_PATH = os.path.join(BASE_DIR, "images", "logo.png")
+MODEL_STACK_PATH = os.path.join(BASE_DIR, "models", "modelo_stack.pkl")
+MODEL_LSTM_PATH = os.path.join(BASE_DIR, "models", "modelo_lstm.h5")
 
 
 ##--------------------------------------------------------------------------------------- CONFIGURACIÓN------------------------------------------------------------------------------------##
