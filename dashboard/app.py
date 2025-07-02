@@ -13,7 +13,7 @@ from parcel_coords import parcel_coords
 ##--------------------------------------------------------------------------------------- CONFIGURACIÓN------------------------------------------------------------------------------------##
 st.set_page_config(
     page_title="AMUTIO Predictive Dashboard",
-    page_icon="../images/logo.png",
+    page_icon="images/logo.png",
     layout="wide",
     initial_sidebar_state="expanded"
 )
